@@ -1,0 +1,17 @@
+#Import('env')
+env = Environment()
+env['CPPPATH'] = '.'
+       
+source = '''Analysisor.cpp  BananaCat.cpp       QGramsReader.cpp  Thread.cpp      Util.cpp
+Arbitrator.cpp  Parser.cpp     Record.cpp        ThreadPool.cpp  
+Checker.cpp     Predictor.cpp  ResultCache.cpp   Url.cpp         
+Detector.cpp    Priority.cpp   SqliteReader.cpp'''.split()
+#objs = env.Object(source)
+#env.Library("base", objs)
+env['LIBS'] = ['pthread', 'sqlite3']
+env['CCFLAGS'] = ['-g', '-O2']
+env.Program("emma", source)
+
+
+for subdir in []:
+    SConscript('%s/SConscript'%subdir)
