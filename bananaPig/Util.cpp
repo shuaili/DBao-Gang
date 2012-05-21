@@ -5,7 +5,7 @@ using namespace std::tr1;
 namespace shrek {
 
 const string dir = "./internal/";
-
+const string htmlcxx = "~/Programs/bin/htmlcxx ";
 int getHour(int64_t date) {
     time_t d = date / 1000000;
     tm *ptr = localtime(&d);
@@ -82,7 +82,7 @@ bool extractHref(std::string& fbase) {
       string mv = "mv " + convFile + " " + filename;
       (void)system(mv.c_str());
     }
-    string cmd = "htmlcxx " + filename;
+    string cmd = htmlcxx + filename;
     return system(cmd.c_str()) != -1;
 }
 

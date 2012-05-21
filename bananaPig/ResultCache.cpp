@@ -14,13 +14,24 @@ bool ResultCache::addUrl(string & url, int flag)
     string content;
     readWholeFile(filename, content);
 
-    if(content.empty()) { return false; }
-    cout<<"insertResult:"<<filename<<endl;
+    if(!content.empty()) { 
+        cout<<"insertResultToken:"<<filename<<endl;
+        ScopedLock lock(_mutex);
+        _tokenMap[content] = flag;
+    }
+
+    filename = fbase + ".js";
+    readWholeFile(filename, content);
+    if(!content.empty()) { 
+        cout<<"insertResultJs:"<<filename<<endl;
+        ScopedLock lock(_mutex);
+        _jsMap[content] = flag;
+    }
 
     ScopedLock lock(_mutex);
-    _contentMap[content] = flag;
     Node node(currentTime(), flag);
     _urlMap[url] = node;
+
     return true;
 }
 
@@ -38,14 +49,14 @@ bool ResultCache::needDetect(string & url)
 }
 
 
-
-
-int ResultCache::search(string & url, int64_t& dtime, int64_t& jsTime, int64_t& tkTime) {
+int ResultCache::search(string & url, int64_t& dtime, int64_t& jsTime, int64_t& tkTime, HitType& hitType) {
+    hitType = H_MISS;
     if(sLatency != 0) {
         ScopedLock lock(_mutex);
         UrlMap::iterator iter = _urlMap.find(url);
         if(iter != _urlMap.end()) {
             if(currentTime() - iter->second.vtime < sLatency) {
+                hitType = H_URL;
                 return iter->second.flag;
             }
         }
@@ -68,22 +79,32 @@ int ResultCache::search(string & url, int64_t& dtime, int64_t& jsTime, int64_t& 
         cout<<"ERROR:extractJs:"<<debugStr<<endl;
         return FMiss;
     }
+    string content;
+    readWholeFile(fbase + ".js", content);
+    if(!content.empty()) {
+        ScopedLock lock(_mutex);
+        ContentMap::iterator iter = _jsMap.find(content);
+        if(iter != _tokenMap.end()) {
+            hitType = H_JS;
+            return iter->second;
+        }
+    }
     
     if(!parseTokens(fbase, tkTime)) {
         cout<<"ERROR:parseTokens:"<<debugStr<<endl;
         return FMiss;
     }
 	
-    string content;
+
     readWholeFile(fbase + ".token", content);
     if(content.empty()) { return FGood; } //benign
 
     ScopedLock lock(_mutex);
-    ContentMap::iterator iter = _contentMap.find(content);
-    if(iter == _contentMap.end()) {
-        //    parseTokens(fbase, tkTime);
+    ContentMap::iterator iter = _tokenMap.find(content);
+    if(iter == _tokenMap.end()) {
         return FMiss;            // miss
     } 
+    hitType = H_TK;
     return iter->second;      //hit
 }
 

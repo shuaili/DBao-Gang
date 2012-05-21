@@ -63,7 +63,7 @@ void Arbitrator::stop() {
 
 ostream & operator<<(ostream & out, Arbitrator & a) {
     RecordVec::iterator iter = a._userQueue.begin();
-    int hit = 0;
+    int hit[H_COUNT] = {0};
     int64_t ptime = 0;
     int64_t pureptime = 0;
     int64_t dtime = 0;
@@ -75,8 +75,11 @@ ostream & operator<<(ostream & out, Arbitrator & a) {
     string missUrls;
     for(; iter != a._userQueue.end(); ++iter) {
         out<<*iter<<endl;
-        if(iter->_hit) { ++hit; } 
-        else { missUrls += iter->_name + "\n"; }
+        if(iter->_hit) { 
+            ++hit[iter->_hit]; 
+        } else {
+            missUrls += iter->_name + "\n"; 
+        }
         dtime += iter->_dtime;
         jstime += iter->_jsTime;
         svmtime += iter->_svmTime;
@@ -90,8 +93,10 @@ ostream & operator<<(ostream & out, Arbitrator & a) {
 
     out<<"****************summary**************"<<endl;
     out<<"total: "<<num<<endl;
-    out<<"hit: "<<hit<<endl;
-    out<<"hit rate: "<< hit/num <<endl;
+    out<<"url hit: "<<hit[H_URL]<<endl;
+    out<<"js hit: "<<hit[H_JS]<<endl;
+    out<<"tk hit: "<<hit[H_TK]<<endl;
+    out<<"hit rate: "<< (hit[H_URL] + hit[H_JS] + hit[H_TK])/num<<endl;
     out<<"total detected: "<<a._checker._detectUrlCount<<endl;
     out<<"deduped url:" <<a._detector.getDedup()<<endl;
     out<<"dtime: "<<dtime/num/1000000.0<<endl;

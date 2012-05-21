@@ -2,7 +2,7 @@
 #define SHREK_RESULTCACHE_H
 
 #include <Common.h>
-
+#include <Record.h>
 namespace shrek {
 
 class ResultCache
@@ -16,7 +16,8 @@ private:
 public:
     const static int64_t sLatency = 0;
     typedef std::tr1::unordered_map<std::string, int> ContentMap;
-    ContentMap _contentMap;
+    ContentMap _jsMap;
+    ContentMap _tokenMap;
     struct Node
     {
         Node() {}
@@ -31,9 +32,10 @@ public:
     bool addUrl(std::string & url, int flag);
     int search(std::string& url) {
         int64_t tmp;
-        return search(url, tmp, tmp, tmp);
+        HitType h;
+        return search(url, tmp, tmp, tmp, h);
     }
-    int search(std::string & url, int64_t &dtime, int64_t& jsTime, int64_t& tkTime);
+    int search(std::string & url, int64_t &dtime, int64_t& jsTime, int64_t& tkTime, HitType& hitType);
 
     bool needDetect(std::string & url);
 

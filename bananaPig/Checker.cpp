@@ -49,12 +49,11 @@ void Checker::checkRecord(Record* record) {
     string fbase;
     if(!genFileBasename(url, fbase)) { return; }
     int64_t stime = currentTime();
-    int flag = _result.search(url, record->_dtime, record->_jsTime, record->_tkTime);
+    int64_t hitType;
+    int flag = _result.search(url, record->_dtime, record->_jsTime, record->_tkTime, record->_hit);
     if(flag != FMiss ) {  // hit~~~ benign or malicious depends on flag.
-        record->_hit = true;
     } else { //miss
         // the page has already been wgeted, set the download to be false 
-        record->_hit = false;
         flag = detect(url, record->_svmTime, record->_ftime);
         if(flag != FFail) {
             _result.addUrl(url, flag);

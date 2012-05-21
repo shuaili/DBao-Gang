@@ -1,0 +1,8 @@
+env relative:
+1. external/extract.py
+   python path
+   #!/home/shuai.li/Programs/bin/python @93
+
+2. Util.cpp
+   const string htmlcxx = "~/Programs/bin/htmlcxx " @93
+   

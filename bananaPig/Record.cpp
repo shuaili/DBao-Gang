@@ -4,6 +4,13 @@ using namespace std;
 using namespace std::tr1;
 namespace shrek {
 
+static const char* sHitTypeStr[] = {
+    "H_MISS",
+    "H_URL",
+    "H_JS",
+    "H_TK",
+};
+
 ostream & operator<<(ostream & out, Record &a) {
         out<<"url name : "<<endl<<a._name<<endl;
         time_t date = time_t(a._vtime/1000000);
@@ -21,7 +28,7 @@ ostream & operator<<(ostream & out, Record &a) {
         out<<"return time is :    "<<a._rtime<<endl;
         out<<"benign or malicious : "<<a._flag<<endl;
 
-        out<<"hit or miss: "<<( a._hit ? "hit" : "miss" )<<endl
+        out<<"hit type: "<< sHitTypeStr[a._hit]<<endl
            <<"process time:    "<<a._processTime<<endl
            <<"pure process time:    "<<a._pureProcessTime<<endl
            <<"*******************************************************"<<endl;

@@ -5,7 +5,7 @@
 
 namespace shrek {
 enum { FGood = 1, FMiss = 0,  FMali = -1, FFail = -2, };
-
+enum HitType{ H_MISS = 0, H_URL, H_JS, H_TK, H_COUNT};
 class Record
 {
 public:
@@ -14,7 +14,7 @@ public:
     int64_t _nextone;
     int64_t _rtime;
     int _flag; // 1 good, -1 malicious;
-    bool _hit;  // hit or miss
+    HitType _hit;  // HitType { H_MISS, H_URL, H_JS, H_TK };
     int64_t _dtime;
     int64_t _jsTime;
     int64_t _svmTime;
@@ -34,7 +34,7 @@ public:
         _tkTime = 0;
 	_ftime = 0;
         _flag = 0;
-        _hit = false;
+        _hit = H_MISS;
         _processTime = 0;
         _pureProcessTime = 0;
     }
