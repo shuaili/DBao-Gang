@@ -1,0 +1,16 @@
+#Import('env')
+env = Environment()
+env['CPPPATH'] = '.'
+       
+env['LIBS'] = ['pthread']
+env['CCFLAGS'] = ['-g', '-O0']
+
+sourceEagle = '''
+	    ThreadPool.cpp Eagle.cpp Thread.cpp CountrySide.cpp
+	    '''.split()
+
+env.Program("eagle", sourceEagle)
+
+
+for subdir in []:
+    SConscript('%s/SConscript'%subdir)
