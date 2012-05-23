@@ -22,9 +22,9 @@ int main(int argc, char** argv) {
   //eagle born
   Eagle eagle;
 
-  ThreadPool pool(30);
+  ThreadPool pool(3);
   pool.start();
-  int outputInterval = 100;
+  int outputInterval = 1;
   //run
   int64_t ct = -1;
   ofstream fout(argv[2]);

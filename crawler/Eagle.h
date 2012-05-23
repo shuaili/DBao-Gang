@@ -19,7 +19,7 @@ namespace shrek {
     bool  readWholeFile(std::string& file, std::string& content);
     int64_t currentTime();
     bool wget(std::string& url, std::string& file);
-
+    bool extractJs(std::string& file);
     static std::tr1::hash<std::string> sHash;
   };
 

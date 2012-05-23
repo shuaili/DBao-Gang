@@ -29,7 +29,7 @@ bool wget(std::string& url, std::string& fbase, int64_t& time);
 
 bool svm(std::string& fbase, int64_t& time);
 
-
+extern double gNetFlowKB;
 
 extern const std::string dir;
 

@@ -62,6 +62,9 @@ void Arbitrator::stop() {
 }
 
 ostream & operator<<(ostream & out, Arbitrator & a) {
+
+  out<<"***********result detail**************"<<endl;
+
     RecordVec::iterator iter = a._userQueue.begin();
     int hit[H_COUNT] = {0};
     int64_t ptime = 0;
@@ -96,16 +99,17 @@ ostream & operator<<(ostream & out, Arbitrator & a) {
     out<<"url hit: "<<hit[H_URL]<<endl;
     out<<"js hit: "<<hit[H_JS]<<endl;
     out<<"tk hit: "<<hit[H_TK]<<endl;
+    out<<"null hit"<<hit[H_NULL]<<endl;
     out<<"hit rate: "<< (hit[H_URL] + hit[H_JS] + hit[H_TK])/num<<endl;
     out<<"total detected: "<<a._checker._detectUrlCount<<endl;
     out<<"deduped url:" <<a._detector.getDedup()<<endl;
-    out<<"dtime: "<<dtime/num/1000000.0<<endl;
-    out<<"jstime: "<<jstime/num/1000000.0<<endl;
-    out<<"tktime: "<<tktime/num/1000000.0<<endl;
-    out<<"ftime: "<<ftime/num/1000000.0<<endl;
-    out<<"svmtime: "<<svmtime/num/1000000.0<<endl;
-    out<<"processtime: "<<ptime/num/1000000.0<<endl;
-    out<<"puretime: "<<pureptime/num/1000000.0<<endl;
+    out<<"dtime: "<<dtime/num/1000.0<<endl;
+    out<<"jstime: "<<jstime/num/1000.0<<endl;
+    out<<"tktime: "<<tktime/num/1000.0<<endl;
+    out<<"ftime: "<<ftime/num/1000.0<<endl;
+    out<<"svmtime: "<<svmtime/num/1000.0<<endl;
+    out<<"processtime: "<<ptime/num/1000.0<<endl;
+    out<<"puretime: "<<pureptime/num/1000.0<<endl;
 
     return out;
 }

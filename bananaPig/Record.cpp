@@ -9,6 +9,7 @@ static const char* sHitTypeStr[] = {
     "H_URL",
     "H_JS",
     "H_TK",
+    "H_NULL"
 };
 
 ostream & operator<<(ostream & out, Record &a) {

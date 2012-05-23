@@ -14,7 +14,7 @@ private:
     ResultCache(const ResultCache &);
     ResultCache& operator=(const ResultCache &);
 public:
-    const static int64_t sLatency = 0;
+    const static int64_t sLatency = 60000;
     typedef std::tr1::unordered_map<std::string, int> ContentMap;
     ContentMap _jsMap;
     ContentMap _tokenMap;
@@ -29,11 +29,10 @@ public:
     UrlMap _urlMap;
     ThreadMutex _mutex;
 
-    bool addUrl(std::string & url, int flag);
-    int search(std::string& url) {
+    bool addUrl(std::string & url, int flag, HitType& hitType);
+    int search(std::string& url, HitType& hitType) {
         int64_t tmp;
-        HitType h;
-        return search(url, tmp, tmp, tmp, h);
+        return search(url, tmp, tmp, tmp, hitType);
     }
     int search(std::string & url, int64_t &dtime, int64_t& jsTime, int64_t& tkTime, HitType& hitType);
 

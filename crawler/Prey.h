@@ -10,15 +10,21 @@ public:
     _url = url;
     //not count first preyUpon
     _totalCt = -1;
-    _diffCt = -1;
-    _preHashKey = 0;
+    _htmlDiffCt = -1;
+    _preHtmlKey = 0;
+    _jsDiffCt = -1;
+    _preJsKey = 0;
     _maxDtime = 0;
   }
-  void growUp(size_t hashKey, int64_t dtime) {
+    void growUp(size_t htmlKey, size_t jsKey, int64_t dtime) {
     ++_totalCt;
-    if(hashKey != _preHashKey) {
-      ++_diffCt;
-      _preHashKey = hashKey;
+    if(htmlKey != _preHtmlKey) {
+      ++_htmlDiffCt;
+      _preHtmlKey = htmlKey;
+    }
+    if(jsKey != _preJsKey) {
+        ++_jsDiffCt;
+        _preJsKey = jsKey;
     }
     if(dtime > _maxDtime) {
       _maxDtime = dtime;
@@ -27,14 +33,18 @@ public:
 
   std::string _url;
   int64_t _totalCt;
-  int64_t _diffCt;
-  size_t _preHashKey;
+  int64_t _htmlDiffCt;
+  int64_t _jsDiffCt;
+  size_t _preHtmlKey;
+  size_t _preJsKey;
   int64_t _maxDtime;
   //  ThreadMutex _mutex;
   friend std::ostream& operator<<(std::ostream& out, Prey& p) {
     out<<"*****************************"<<std::endl
        <<p._url<<std::endl
-       <<"totalCt:"<<p._totalCt<<"\tdiffCt:"<<p._diffCt
+       <<"totalCt:"<<p._totalCt
+       <<"\thtmlDiffCt:"<<p._htmlDiffCt
+       <<"\tjsDiffCt:"<<p._jsDiffCt
        <<"\tmaxDtime:"<<p._maxDtime/1000000.0<<std::endl;
     return out;
   }

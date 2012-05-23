@@ -5,7 +5,8 @@ using namespace std::tr1;
 namespace shrek {
 
 const string dir = "./internal/";
-const string htmlcxx = "~/Programs/bin/htmlcxx ";
+const string htmlcxx = "~/local/bin/htmlcxx ";
+double gNetFlowKB = 0;
 int getHour(int64_t date) {
     time_t d = date / 1000000;
     tm *ptr = localtime(&d);
@@ -70,9 +71,6 @@ bool convGb2Utf(std::string& fbase) {
     return system(cmd.c_str()) != -1;
 }
 
-
-
-
 bool extractHref(std::string& fbase) {
     string filename = dir + fbase + ".html";
 
@@ -85,9 +83,6 @@ bool extractHref(std::string& fbase) {
     string cmd = htmlcxx + filename;
     return system(cmd.c_str()) != -1;
 }
-
-
-
 
 bool parseTokens(std::string& fbase, int64_t& time) {
     static ThreadMutex mutex;
@@ -121,9 +116,14 @@ bool wget(std::string& url, std::string& fbase, int64_t& time) {
     wgetStr += filename + " " + urlQuote;
     int ret = system(wgetStr.c_str());
     time = currentTime() - time;
-    if(WTERMSIG(ret) == 6 ) {
+    if(WTERMSIG(ret) == 6 || WEXITSTATUS(ret) != 0) {
         return false;
     }
+    ifstream fin(filename.c_str());
+    fin.seekg(0, ios::end);
+    int len = fin.tellg();
+    fin.close();
+    gNetFlowKB += len/1024.0;
     return true;
 }
 

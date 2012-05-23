@@ -5,7 +5,7 @@
 
 namespace shrek {
 enum { FGood = 1, FMiss = 0,  FMali = -1, FFail = -2, };
-enum HitType{ H_MISS = 0, H_URL, H_JS, H_TK, H_COUNT};
+enum HitType{ H_MISS = 0, H_URL, H_JS, H_TK, H_NULL, H_COUNT};
 class Record
 {
 public:

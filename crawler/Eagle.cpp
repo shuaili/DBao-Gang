@@ -38,6 +38,18 @@ bool Eagle::wget(string& url, string& file) {
   return true;
 }
 
+bool Eagle::extractJs(std::string& file) {
+    string cmd = "mv " + file + " " + file + ".html";
+    system(cmd.c_str());
+    string extractJsStr("external/extract.py ");
+    extractJsStr += file + ".html";
+    int ret = system(extractJsStr.c_str());
+    if(ret == 256) {
+        return false;
+    }
+    return true;
+}
+
 void Eagle::operator() (Prey* prey) {
   ostringstream os;
   os << pthread_self();
@@ -57,8 +69,14 @@ void Eagle::operator() (Prey* prey) {
     cout<<"ERROR:empty:"<<file<<endl;
     return;
   }
-  size_t hashKey = sHash(content);
-  prey->growUp(hashKey, dtime);
+  size_t htmlKey = sHash(content);
+  extractJs(file);
+  file += ".js";
+  if(!readWholeFile(file, content)) {
+      cout<<"ERROR:readfile:"<<file<<endl;
+  }
+  size_t jsKey = sHash(content);
+  prey->growUp(htmlKey, jsKey, dtime);
   return;
 }
 //thread safe?

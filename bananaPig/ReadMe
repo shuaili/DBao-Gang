@@ -6,3 +6,5 @@ env relative:
 2. Util.cpp
    const string htmlcxx = "~/Programs/bin/htmlcxx " @93
    
+3. Priority::computeLocalPriority()
+   now = 1336060691ll * 1000000;  @old sqlite data

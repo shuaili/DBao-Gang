@@ -5,27 +5,34 @@ using namespace std;
 using namespace std::tr1;
 namespace shrek {
 
-bool ResultCache::addUrl(string & url, int flag)
+bool ResultCache::addUrl(string & url, int flag, HitType & hitType)
 {
+    if(hitType != H_JS || hitType != H_TK) { return true; }
+
     string fbase;
     if(!genFileBasename(url, fbase)) { return false; }
     //using token to index
-    string filename = fbase + ".token";
-    string content;
-    readWholeFile(filename, content);
-
-    if(!content.empty()) { 
-        cout<<"insertResultToken:"<<filename<<endl;
-        ScopedLock lock(_mutex);
-        _tokenMap[content] = flag;
-    }
-
+    string filename, content;
     filename = fbase + ".js";
     readWholeFile(filename, content);
     if(!content.empty()) { 
         cout<<"insertResultJs:"<<filename<<endl;
         ScopedLock lock(_mutex);
         _jsMap[content] = flag;
+    }
+
+    if(hitType == H_JS) {
+        int64_t tkTime;
+        if(parseTokens(fbase, tkTime)) {
+            filename = fbase + ".token";
+            readWholeFile(filename, content);
+            
+            if(!content.empty()) { 
+                cout<<"insertResultToken:"<<filename<<endl;
+                ScopedLock lock(_mutex);
+                _tokenMap[content] = flag;
+            }
+        }
     }
 
     ScopedLock lock(_mutex);
@@ -39,7 +46,6 @@ bool ResultCache::addUrl(string & url, int flag)
 
 bool ResultCache::needDetect(string & url)
 {
-//    if(url.find("dianping") == string::npos) { return false; }
     ScopedLock lock(_mutex);
     UrlMap::iterator iter = _urlMap.find(url);
     if(iter != _urlMap.end()) {
@@ -88,6 +94,9 @@ int ResultCache::search(string & url, int64_t& dtime, int64_t& jsTime, int64_t& 
             hitType = H_JS;
             return iter->second;
         }
+    } else {
+	hitType = H_NULL;
+	return FGood;
     }
     
     if(!parseTokens(fbase, tkTime)) {

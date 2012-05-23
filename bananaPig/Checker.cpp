@@ -5,7 +5,6 @@ using namespace std::tr1;
 namespace shrek {
 
 void Checker::checkUrl(string url) {
-//    if(url.find("dianping") == string::npos) { return;}
     if(!_result.needDetect(url))
         return;
     {
@@ -19,15 +18,19 @@ void Checker::checkUrl(string url) {
     ++_detectUrlCount;
     string fbase;
     if(!genFileBasename(url, fbase)) { return;}
-  
-    int flag = _result.search(url);
-    if(flag == 0 ) { //miss
-        // the page has already been wgeted, set the download to be false 
+    
+    HitType hitType;
+    int flag = _result.search(url, hitType);
+    if(flag == FMiss ) { //miss
+        assert(hitType == H_MISS);
         int64_t tmp;
         flag = detect(url, tmp, tmp);
         if(flag != FFail) {
-            _result.addUrl(url, flag);
+            _result.addUrl(url, flag, hitType);
         }
+    }
+    else if(hitType == H_TK) {
+        _result.addUrl(url, flag, hitType);
     }
 
     ScopedLock lock(_cond);
@@ -52,11 +55,15 @@ void Checker::checkRecord(Record* record) {
     int64_t hitType;
     int flag = _result.search(url, record->_dtime, record->_jsTime, record->_tkTime, record->_hit);
     if(flag != FMiss ) {  // hit~~~ benign or malicious depends on flag.
+        if(record->_hit == H_TK) {
+            _result.addUrl(url, flag, record->_hit);
+        }
     } else { //miss
         // the page has already been wgeted, set the download to be false 
+        assert(record->_hit == H_MISS);
         flag = detect(url, record->_svmTime, record->_ftime);
         if(flag != FFail) {
-            _result.addUrl(url, flag);
+            _result.addUrl(url, flag, record->_hit);
         }
     }
     record->_flag = flag;
