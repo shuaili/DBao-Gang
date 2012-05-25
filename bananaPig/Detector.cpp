@@ -5,13 +5,12 @@ using namespace std::tr1;
 namespace shrek {
 
 void Detector::warmUp() {
-  //  _checker.checkUrl("www.weibo.com");
-  //_checker.checkUrl("www.weibo.com");
-  //    _checker.checkUrl("http://weibo.com/2344812331?wvr=3.6&lf=reg");
-  //  _checker.checkUrl("http://weibo.com/2344812331?wvr=3.6&lf=reg&nojs=1");
-  //  _checker.checkUrl("www.taobao.com");
-      _checker.checkUrl("http://www.baidu.com/");
-      //  _checker.checkUrl("http://www.kimiss.com");
+    _checker.checkUrl("www.weibo.com");
+    _checker.checkUrl("www.cosdna.com");
+    _checker.checkUrl("www.taobao.com");
+    _checker.checkUrl("http://www.baidu.com/");
+    _checker.checkUrl("http://www.kimiss.com");
+    _checker.checkUrl("http://www.dianping.com/");
 }
 
 int Detector::getDedup() {

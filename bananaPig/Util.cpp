@@ -111,7 +111,7 @@ bool extractJs(std::string& fbase, int64_t& time) {
 bool wget(std::string& url, std::string& fbase, int64_t& time) {
     time = currentTime();
     string filename = dir + fbase + ".html";
-    string wgetStr("wget -N -q --timeout=10 --load-cookies=cookies.txt --user-agent=\"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3 (.NET CLR 3.5.30729)\" -O ");
+    string wgetStr("wget -N -q --timeout=10 --load-cookies=cookies.txt --tries=2 --user-agent=\"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3 (.NET CLR 3.5.30729)\" -O ");
     string urlQuote = "\"" + url + "\"";
     wgetStr += filename + " " + urlQuote;
     int ret = system(wgetStr.c_str());

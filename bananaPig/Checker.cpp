@@ -29,7 +29,7 @@ void Checker::checkUrl(string url) {
             _result.addUrl(url, flag, hitType);
         }
     }
-    else if(hitType == H_TK) {
+    else if(hitType == H_JS) {
         _result.addUrl(url, flag, hitType);
     }
 
@@ -55,7 +55,8 @@ void Checker::checkRecord(Record* record) {
     int64_t hitType;
     int flag = _result.search(url, record->_dtime, record->_jsTime, record->_tkTime, record->_hit);
     if(flag != FMiss ) {  // hit~~~ benign or malicious depends on flag.
-        if(record->_hit == H_TK) {
+        if(record->_hit == H_JS) {
+            //add token
             _result.addUrl(url, flag, record->_hit);
         }
     } else { //miss

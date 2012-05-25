@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 
     Detector detector(checker);
     checker.setDetector(&detector);
-    //detector.warmUp();
+    detector.warmUp();
     detector.start(16);
     detector(priority._detectUrls);
     Arbitrator arbitrator(checker, recordVec, detector);

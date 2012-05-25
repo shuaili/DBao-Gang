@@ -7,21 +7,22 @@ namespace shrek {
 
 bool ResultCache::addUrl(string & url, int flag, HitType & hitType)
 {
-    if(hitType != H_JS || hitType != H_TK) { return true; }
+//    if(hitType != H_MISS || hitType != H_JS || hitType != H_TK) { return true; }
 
     string fbase;
     if(!genFileBasename(url, fbase)) { return false; }
     //using token to index
     string filename, content;
-    filename = fbase + ".js";
-    readWholeFile(filename, content);
-    if(!content.empty()) { 
-        cout<<"insertResultJs:"<<filename<<endl;
-        ScopedLock lock(_mutex);
-        _jsMap[content] = flag;
+    if(hitType != H_JS) {
+        filename = fbase + ".js";
+        readWholeFile(filename, content);
+        if(!content.empty()) { 
+            cout<<"insertResultJs:"<<filename<<endl;
+            ScopedLock lock(_mutex);
+            _jsMap[content] = flag;
+        }
     }
-
-    if(hitType == H_JS) {
+    if(hitType != H_TK) {
         int64_t tkTime;
         if(parseTokens(fbase, tkTime)) {
             filename = fbase + ".token";
@@ -106,7 +107,10 @@ int ResultCache::search(string & url, int64_t& dtime, int64_t& jsTime, int64_t& 
 	
 
     readWholeFile(fbase + ".token", content);
-    if(content.empty()) { return FGood; } //benign
+    if(content.empty()) { 
+        hitType = H_TK;
+        return FGood;
+    } //benign
 
     ScopedLock lock(_mutex);
     ContentMap::iterator iter = _tokenMap.find(content);

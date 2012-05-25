@@ -31,7 +31,8 @@ ostream & operator<<(ostream & out, Record &a) {
 
         out<<"hit type: "<< sHitTypeStr[a._hit]<<endl
            <<"process time:    "<<a._processTime<<endl
-           <<"pure process time:    "<<a._pureProcessTime<<endl
+           <<"pure process time:    "
+           <<(a._pureProcessTime-a._svmTime*0.99)<<endl
            <<"*******************************************************"<<endl;
 		
         return out;
