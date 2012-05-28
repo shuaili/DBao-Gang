@@ -16,11 +16,23 @@ suffixs = [
     ".all"
     ]
 
+sqls = [
+    "places.sqlite",
+    ]
+
+nows = [
+    333333333,
+    ]
 delta = 0
 stop = 0 
-while True:
+
+for s in range(len(sqls)):
+    sql = "external/"+sqls[s]
+    now = str(nows[s])
+    resultDir = sql+".result"
+    os.system("mkdir " + resultDir)
     for i in range(len(cmds)):
-        cmd = cmds[i] + "-d" + str(delta) + " | tee result/" + str(delta) + suffixs[i]
+        cmd = cmds[i] + "-d" + str(delta) + ' -s' + sql + " -n" + now + " | tee " + resultDir + "/" + str(delta) + suffixs[i] 
         print cmd
         ret = os.system(cmd)
         if ret != 0:
